@@ -1,2 +1,0 @@
-SourcePath=d:\git\succession_wars
-DestinationPath=c:\Temp\krs\succession_wars
