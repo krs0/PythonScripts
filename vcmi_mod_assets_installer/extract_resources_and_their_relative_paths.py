@@ -39,13 +39,15 @@ def process_json_files(folder_path, output_file):
 
 def check_for_valid_values(data):
     # Function to check if there are valid values in the JSON data
+    valid_extensions = {".def", ".png", ".bik", ".smk", ".mp3", ".wav"}
+    
     if isinstance(data, dict):
         return any(check_for_valid_values(value) for value in data.values())
     elif isinstance(data, list):
         return any(check_for_valid_values(item) for item in data)
     else:
-        # Only consider string values that contain '/'
-        return isinstance(data, str) and '/' in data
+        # Check if data is a string containing '/' or ends with one of the valid extensions
+        return isinstance(data, str) and ('/' in data or any(data.endswith(ext) for ext in valid_extensions))
 
 
 def process_json(data, output_file, parent_key=""):
