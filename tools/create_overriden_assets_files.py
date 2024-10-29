@@ -54,8 +54,15 @@ def list_files_on_disk(mod_base_path, mod_path):
     # Recursively collect files, excluding .json and .txt files
     for root, dirs, files in os.walk(full_mod_path):
         for file in files:
-            # Exclude .json and .txt files
-            if not file.endswith('.json') and not file.endswith('.txt') and not file.endswith('.bmp') and not file.endswith('.pdn'):
+            if file.endswith('.bmp'):
+                # Full path of the original .bmp file
+                bmp_file_path = os.path.join(root, file)
+            
+                # New file path with '.png' extension
+                file = file[:-4] + '.png'
+
+            # Exclude .json, .txt and.pdn files
+            if not file.endswith('.json') and not file.endswith('.txt') and not file.endswith('.pdn'):
                 # Get the relative path to the mod base path
                 relative_path = os.path.relpath(os.path.join(root, file), mod_base_path)  # Relative path to the base path
                 # Store the tuple (relative path, filename)
@@ -96,7 +103,7 @@ def find_overridden_assets(mod_file_list, mod_base_path):
 if __name__ == "__main__":
     # Default paths
     mod_base_path = r"d:/git/succession_wars_overridden_assets_tests"  # Default mod base path
-    input_file = r"d:/temp/Krs/Python/Extract_WoG_relative_paths/out/assets_to_paths_mapping.txt"  # Default input file
+    input_file = r"d:/temp/Krs/Python/VCMI_mod_assets_scripts/vcmi_mod_assets_installer/dist/out/assets_to_paths_mapping.txt"  # Default input file
 
     # Step 1: Parse the input file and collect listed files for each mod
     mod_file_list = parse_file(input_file)
