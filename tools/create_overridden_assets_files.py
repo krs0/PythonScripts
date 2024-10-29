@@ -81,10 +81,12 @@ def find_overridden_assets(mod_file_list, mod_base_path):
         # Find files on disk but not listed in the input file (compare only the second entry, which is the filename)
         overridden_files = {file_tuple for file_tuple in actual_files if file_tuple[1] not in listed_filenames_set}
 
+        # Sort the overridden files by their relative paths to prevent interleaving
+        sorted_overridden_files = sorted(overridden_files, key=lambda x: x[0])
+
         # Write the overridden files to a new file in the corresponding mod folder
-        if overridden_files:
+        if sorted_overridden_files:
             # Move one level up from the "Content" subfolder
-            # Find the path up to one level before "Content"
             parent_mod_path = mod_path[:mod_path.rfind(r"\Content")]
 
             # Construct the output path to save one level up from "Content"
@@ -95,9 +97,10 @@ def find_overridden_assets(mod_file_list, mod_base_path):
             os.makedirs(mod_folder, exist_ok=True)
 
             with open(mod_output_path, 'w') as outfile:
-                for relative_path, file_name in overridden_files:
+                for relative_path, file_name in sorted_overridden_files:
                     # Write the full relative path and the file name
                     outfile.write(f'"{relative_path}" : "{file_name}"\n')
+
 
 
 if __name__ == "__main__":
