@@ -1,6 +1,14 @@
 import os
 import json5  # json5 allows comments in JSON
+
+# json5 may or may not expose a JSON5DecodeError class depending on version.
+# Fall back to ValueError so decode errors are caught correctly.
+try:
+    JSON5DecodeError = json5.JSON5DecodeError
+except AttributeError:
+    JSON5DecodeError = ValueError
 import argparse
+import re
 
 
 def process_json_files(folder_path, output_file):
@@ -31,8 +39,10 @@ def process_json_files(folder_path, output_file):
                             # Process the JSON data after writing the comment
                             process_json(data, output_file)
 
-                    except json5.JSON5DecodeError as e:  # Use the correct exception for json5
-                        print(f"Error decoding JSON in file {file_path}: {e}")
+                    except JSON5DecodeError:
+                        # Print only the simple file name for JSON decode errors (concise output)
+                        print(os.path.basename(file_path))
+                        continue
                     except UnicodeDecodeError as e:
                         print(f"Unicode decoding error in file {file_path}: {e}")
 
@@ -96,9 +106,9 @@ def is_unwanted_line(line):
 
 def main():
     parser = argparse.ArgumentParser(description="Process JSON files to extract specific data.")
-    parser.add_argument('--folder', type=str, default=r"d:\git\succession_wars",
+    parser.add_argument('--folder', type=str, default=r"c:/Users/Krs/Documents/My Games/vcmi/Mods/succession_wars/Mods",
                         help="Path to the folder containing JSON files.")
-    parser.add_argument('--output', type=str, default=r"d:/temp/Krs/Python/Extract_WoG_relative_paths/out/output_SW.txt",
+    parser.add_argument('--output', type=str, default=r"c:/Users/Krs/Documents/My Games/vcmi/Mods/succession_wars/VCMI_SW_mod_Installer/out/assets_to_paths_mapping_raw_2.txt",
                         help="Path to the output file.")
 
     args = parser.parse_args()
