@@ -38,7 +38,7 @@ def calculate_actual_paths_for_assets(input_file_path, output_file_path):
                 elif ext == '.wav':
                     output_directory = "Sounds"
                 elif ext == '.mp3':
-                    output_directory = "Sounds"
+                    output_directory = "Music"
                 elif ext == '.bik':
                     output_directory = "Video"
                 elif ext == '.png':
