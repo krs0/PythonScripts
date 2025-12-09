@@ -1,2 +1,5 @@
+VCMI_populate_SW_assets_based_on_jsons/
+build/
+*.spec
+__pycache__/
 
-VCMI_populate_SW_assets_based_on_jsons/__pycache__/

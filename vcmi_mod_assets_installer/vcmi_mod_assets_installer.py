@@ -51,18 +51,30 @@ def main():
         print(f"Temporary output directory does not exist, creating: {out_folder}")
         os.makedirs(out_folder)
 
-    temp_mod_data_folder = os.path.join(out_folder, 'mod_data') 
+    temp_mod_data_folder = os.path.join(out_folder, 'mod_data')
 
-    if not os.path.exists(temp_mod_data_folder):
-        print(f"Creating Temporary mod data folder for data extraction: {temp_mod_data_folder}")
-        os.makedirs(temp_mod_data_folder)
+    # Check if mod_data folder already exists and ask user if they want to reuse it
+    skip_extraction = False
+    if os.path.exists(temp_mod_data_folder) and os.listdir(temp_mod_data_folder):
+        print(f"\nFound existing mod_data folder: {temp_mod_data_folder}")
+        response = input("Do you want to reuse the existing extracted files? (y/n): ").strip().lower()
+        if response == 'y' or response == 'yes':
+            print("Reusing existing mod_data folder. Skipping extraction...")
+            skip_extraction = True
+        else:
+            print("Will re-extract files to mod_data folder...")
 
-    # Get the list of archive names from the INI settings or define a default
-    archive_names = config.get('Archives', 'files').split(',')
+    if not skip_extraction:
+        if not os.path.exists(temp_mod_data_folder):
+            print(f"Creating Temporary mod data folder for data extraction: {temp_mod_data_folder}")
+            os.makedirs(temp_mod_data_folder)
 
-    # Call the function to extract files with the archive names
-    print(f"Start extracting original mod assets from: {mod_data_folder}")
-    extract_files(mod_data_folder, archive_names, temp_mod_data_folder)
+        # Get the list of archive names from the INI settings or define a default
+        archive_names = config.get('Archives', 'files').split(',')
+
+        # Call the function to extract files with the archive names
+        print(f"Start extracting original mod assets from: {mod_data_folder}")
+        extract_files(mod_data_folder, archive_names, temp_mod_data_folder)
 
     assets_to_paths_mapping_raw_file_path = os.path.join(out_folder, 'assets_to_paths_mapping_raw.txt') 
 
